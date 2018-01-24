@@ -2,7 +2,6 @@ use std::{cmp, fmt, mem};
 use std::fs::{File, Metadata};
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
-use std::sync::Arc;
 
 use bytes::{BufMut, Bytes, BytesMut};
 use futures::{Async, Future, Poll, Stream};
@@ -36,8 +35,7 @@ pub fn new<P: AsRef<Path> + Send + 'static>(
 ) -> FsReadStream {
     FsReadStream {
         buffer: BytesMut::with_capacity(0),
-        //TODO: can we adjust bounds, since this is making an owned copy anyways?
-        path: Arc::new(path.as_ref().to_owned()),
+        path: path.as_ref().to_owned(),
         pool: pool.clone(),
         state: State::Init(opts.buffer_size),
     }
@@ -51,8 +49,7 @@ pub fn new_from_file(
     let final_buf_size = finalize_buf_size(opts.buffer_size, &file);
     FsReadStream {
         buffer: BytesMut::with_capacity(0),
-        //TODO: can we adjust bounds, since this is making an owned copy anyways?
-        path: Arc::new(PathBuf::new()),
+        path: PathBuf::new(),
         pool: pool.clone(),
         state: State::Ready(file, final_buf_size),
     }
@@ -61,7 +58,7 @@ pub fn new_from_file(
 /// A `Stream` of bytes from a target file.
 pub struct FsReadStream {
     buffer: BytesMut,
-    path: Arc<PathBuf>,
+    path: PathBuf,
     pool: FsPool,
     state: State,
 }
