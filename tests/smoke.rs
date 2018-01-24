@@ -54,6 +54,7 @@ fn test_smoke_long() {
     assert_eq!(data.len(), 4096 * 10);
     assert_eq!(&data[..4096], &[1u8; 4096][..]);
     assert_eq!(&data[4096..8192], &[2u8; 4096][..]);
+    assert_eq!(&data[(4096 * 9)..(4096 * 10)], &[10u8; 4096][..]);
 
     fs.delete(tmp).wait().unwrap();
 }
@@ -115,6 +116,7 @@ fn test_from_file_smoke_long() {
     assert_eq!(data.len(), 4096 * 10);
     assert_eq!(&data[..4096], &[1u8; 4096][..]);
     assert_eq!(&data[4096..8192], &[2u8; 4096][..]);
+    assert_eq!(&data[(4096 * 9)..(4096 * 10)], &[10u8; 4096][..]);
 
     fs.delete(tmp).wait().unwrap();
 }
